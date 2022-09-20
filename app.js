@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const pool = require("./database");
+const indexRoutes = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,9 +13,9 @@ app.use(
     extended: true,
   })
 );
+app.use(indexRoutes);
 
 app.get("/", (req, res) => {
-  console.log(pool);
   pool.query("SELECT * FROM users", (err, results) => {
     if (err) {
       throw err;
