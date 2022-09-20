@@ -1,8 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+require("dotenv").config();
+const pool = require("./database");
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(
@@ -12,9 +14,15 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.status(200).json({ info: "Node.js, Express, and Postgres API" });
+  console.log(pool);
+  pool.query("SELECT * FROM users", (err, results) => {
+    if (err) {
+      throw err;
+    }
+    res.status(200).json(results.rows);
+  });
 });
 
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log("Serveur lancé !");
 });
